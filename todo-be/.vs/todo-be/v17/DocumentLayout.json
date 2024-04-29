@@ -1,0 +1,37 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "C:\\Users\\zijad\\Desktop\\ToDo-App\\todo-be\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{019D95E2-7C97-4813-9B29-B57377C179F9}|todo-be\\todo-be.csproj|c:\\users\\zijad\\desktop\\todo-app\\todo-be\\todo-be\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{019D95E2-7C97-4813-9B29-B57377C179F9}|todo-be\\todo-be.csproj|solutionrelative:todo-be\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 0,
+          "Children": [
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "Program.cs",
+              "DocumentMoniker": "C:\\Users\\zijad\\Desktop\\ToDo-App\\todo-be\\todo-be\\Program.cs",
+              "RelativeDocumentMoniker": "todo-be\\Program.cs",
+              "ToolTip": "C:\\Users\\zijad\\Desktop\\ToDo-App\\todo-be\\todo-be\\Program.cs",
+              "RelativeToolTip": "todo-be\\Program.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAAAAAAxAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-04-08T15:50:14.348Z",
+              "EditorCaption": ""
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
