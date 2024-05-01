@@ -17,8 +17,8 @@ public class DatabaseContext : DbContext {
     protected override void OnModelCreating(ModelBuilder modelBuilder) {
 
         modelBuilder.Entity<Role>().HasData(new Role { Id = 1, Name = "User" }, new Role { Id = 2, Name = "Admin" });
-        modelBuilder.Entity<User>().HasData(new User { Id = 1, FirstName = "First", LastName = "User", Email = "example@gmail.com", DateOfBirth = new DateOnly(2001, 9, 23), DateTimeOfRegistration = new DateTime() });
-        modelBuilder.Entity<UserAuth>().HasData(new UserAuth { Id = 1, UserName="firstUser", Password="", UserId=1, RoleId=2 });
+        modelBuilder.Entity<User>().HasData(new User { Id = 1, FirstName = "Admin", LastName = "Admin", Email = "example@gmail.com", DateOfBirth = new DateOnly(2001, 9, 23), DateTimeOfRegistration = new DateTime() });
+        modelBuilder.Entity<UserAuth>().HasData(new UserAuth { Id = 1, UserName="admin", Password= "$2a$11$EXDPG4bTrVM6bMtNYCI9fOIAPE8b.lb3NwQa1Ka1weONKbDp9H1p.", UserId=1, RoleId=2 });
     }
 }
 
