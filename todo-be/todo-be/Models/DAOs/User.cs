@@ -6,6 +6,5 @@ public class User {
     public string Email { get; set; } = string.Empty;
     public DateOnly DateOfBirth { get; set; }
     public DateTime DateTimeOfRegistration { get; set; }
-
 }
 
