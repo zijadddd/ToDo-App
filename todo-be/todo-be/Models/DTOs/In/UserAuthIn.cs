@@ -6,7 +6,9 @@ public record UserAuthIn {
     [Required]
     public string UserName { get; init; } = string.Empty;
     [Required]
-    [RegularExpression(@"^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[\W_]).{8,}$", ErrorMessage = "Invalid password. Valid: Example123*")]
+    [StringLength(64, MinimumLength = 8, ErrorMessage = "Invalid password. The password should be at least 8 characters long.")]
+    [RegularExpression(@"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$",
+    ErrorMessage = "Invalid password. Valid: Abcdef1*")]
     public string Password { get; init; } = string.Empty;
 
     public UserAuthIn(string userName, string password) {
