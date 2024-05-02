@@ -1,6 +1,4 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using System;
-using System.Security.Cryptography;
 using todo_be.Database;
 using todo_be.Exceptions;
 using todo_be.Models.DAOs;
@@ -120,11 +118,13 @@ public class UserService : IUserService {
         return userOut;
     }
 
-    public async Task<string> ChangePassword(int id, string password) {
+    public async Task<string> ChangePassword(int id, ChangePasswordIn request) {
+        if (!request.OldPassword.Equals(request.NewPassword)) throw new PasswordsNotMatchingException();
+
         var userAuth = await _databaseContext.UsersAuths.FirstOrDefaultAsync(ua => ua.UserId == id);
         if (userAuth == null) throw new UserAuthWithIdNotFoundException(id);
 
-        userAuth.Password = BCrypt.Net.BCrypt.HashPassword(password);
+        userAuth.Password = BCrypt.Net.BCrypt.HashPassword(request.NewPassword);
 
         try {
             _databaseContext.UsersAuths.Update(userAuth);
