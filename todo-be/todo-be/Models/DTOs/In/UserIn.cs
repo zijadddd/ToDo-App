@@ -17,7 +17,7 @@ public record UserIn {
     ErrorMessage = "Invalid password. Valid: Abcdef1*")]
     public string Password { get; init; } = string.Empty;
     [Required]
-    [RegularExpression(@"", ErrorMessage ="Invalid date. Valid: 2024-05-01 (yyyy-mm-dd)")]
+    [RegularExpression(@"^\d{4}-\d{2}-\d{2}$", ErrorMessage ="Invalid date. Valid: 2024-05-01 (yyyy-mm-dd)")]
     public string DateOfBirth { get; init; } = string.Empty;
 
     public UserIn(string firstName, string lastName, string email, string password, string dateOfBirth) {

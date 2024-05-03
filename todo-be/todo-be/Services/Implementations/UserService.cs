@@ -53,7 +53,7 @@ public class UserService : IUserService {
             throw new UserNotCreatedException();
         }
 
-        return new UserOutWithoutPassword(user.Id.ToString(), user.FirstName, user.LastName, user.Email, user.DateOfBirth.ToString(), user.DateTimeOfRegistration.ToString());
+        return new UserOutWithoutPassword(user.Id.ToString(), user.FirstName, user.LastName, user.Email, user.DateOfBirth.ToString(), user.DateTimeOfRegistration.ToString(), userAuth.Role.Name);
     }
 
     public async Task<string> DeleteAnUser(int id) {
@@ -75,9 +75,19 @@ public class UserService : IUserService {
         if (users.Count == 0) throw new NotASingleUserWasFoundException();
 
         List<UserOutWithoutPassword> usersOut = new List<UserOutWithoutPassword>();
+        var roles = await _databaseContext.Roles.ToListAsync();
 
-        foreach (var user in users)
-            usersOut.Add(new UserOutWithoutPassword(user.Id.ToString(), user.FirstName, user.LastName, user.Email, user.DateOfBirth.ToString(), user.DateTimeOfRegistration.ToString()));
+        foreach (var user in users) {
+            var userAuth = await _databaseContext.UsersAuths.FirstOrDefaultAsync(ua => ua.UserId == user.Id);
+
+            usersOut.Add(new UserOutWithoutPassword(user.Id.ToString(),
+                                        user.FirstName,
+                                        user.LastName,
+                                        user.Email,
+                                        user.DateOfBirth.ToString(),
+                                        user.DateTimeOfRegistration.ToString(),
+                                        roles.FirstOrDefault(r => r.Id == userAuth.Id).Name));
+        }
 
         return usersOut;
     }
@@ -86,13 +96,17 @@ public class UserService : IUserService {
         var user = await _databaseContext.Users.FirstOrDefaultAsync(u => u.Id == id);
         if (user == null) throw new UserWithIdNotFoundException(id);
 
+        var roles = await _databaseContext.Roles.ToListAsync();
+        var userAuth = await _databaseContext.UsersAuths.FirstOrDefaultAsync(ua => ua.UserId == user.Id);
+
         UserOutWithoutPassword userOutWithoutPassword = new UserOutWithoutPassword(
             user.Id.ToString(),
             user.FirstName,
             user.LastName,
             user.Email,
             user.DateOfBirth.ToString(),
-            user.DateTimeOfRegistration.ToString()
+            user.DateTimeOfRegistration.ToString(),
+            roles.FirstOrDefault(r => r.Id == userAuth.Id).Name
         );
 
         return userOutWithoutPassword;
@@ -105,6 +119,8 @@ public class UserService : IUserService {
         var userAuth = await _databaseContext.UsersAuths.FirstOrDefaultAsync(u => u.UserId == id);
         if (userAuth == null) throw new UserAuthWithIdNotFoundException(id);
 
+        var roles = await _databaseContext.Roles.ToListAsync();
+
         UserOut userOut = new UserOut(
              user.Id.ToString(),
              user.FirstName,
@@ -112,17 +128,18 @@ public class UserService : IUserService {
              user.Email,
              user.DateOfBirth.ToString(),
              user.DateTimeOfRegistration.ToString(),
-             userAuth.Password
+             userAuth.Password,
+             roles.FirstOrDefault(r => r.Id == userAuth.Id).Name
          );
 
         return userOut;
     }
 
     public async Task<string> ChangePassword(int id, ChangePasswordIn request) {
-        if (!request.OldPassword.Equals(request.NewPassword)) throw new PasswordsNotMatchingException();
-
         var userAuth = await _databaseContext.UsersAuths.FirstOrDefaultAsync(ua => ua.UserId == id);
         if (userAuth == null) throw new UserAuthWithIdNotFoundException(id);
+
+        if (!BCrypt.Net.BCrypt.Verify(request.OldPassword, userAuth.Password)) throw new PasswordsNotMatchingException();
 
         userAuth.Password = BCrypt.Net.BCrypt.HashPassword(request.NewPassword);
 
