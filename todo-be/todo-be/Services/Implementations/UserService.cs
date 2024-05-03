@@ -106,14 +106,14 @@ public class UserService : IUserService {
         if (userAuth == null) throw new UserAuthWithIdNotFoundException(id);
 
         UserOut userOut = new UserOut(
-            user.Id.ToString(), 
-            user.FirstName, 
-            user.LastName, 
-            user.Email,
-            userAuth.Password,
-            user.DateOfBirth.ToString(),
-            user.DateTimeOfRegistration.ToString()
-        );
+             user.Id.ToString(),
+             user.FirstName,
+             user.LastName,
+             user.Email,
+             user.DateOfBirth.ToString(),
+             user.DateTimeOfRegistration.ToString(),
+             userAuth.Password
+         );
 
         return userOut;
     }
