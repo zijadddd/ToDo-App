@@ -58,16 +58,20 @@ public class UserService : IUserService {
 
     public async Task<string> DeleteAnUser(int id) {
         var user = await _databaseContext.Users.FirstOrDefaultAsync(u => u.Id == id);
-        if (user == null) throw new UserWithIdNotFoundException(id);
+        if (user is null) throw new UserWithIdNotFoundException(id);
+
+        var userAuths = await _databaseContext.UsersAuths.FirstOrDefaultAsync(ua => ua.UserId == id);
+        if (userAuths is null) throw new UserAuthenticationDetailsNotFoundException(id);
 
         try {
-            _databaseContext.Remove(user);
+            _databaseContext.Users.Remove(user);
+            _databaseContext.UsersAuths.Remove(userAuths);
             await _databaseContext.SaveChangesAsync();
         } catch (Exception ex) {
             throw new UserNotDeletedException(id);
         }
 
-        return $"User with id {id} has been successfully deleted";
+        return $"User with id {id} has been successfully deleted.";
     }
 
     public async Task<List<UserOutWithoutPassword>> GetAllUsers() {
@@ -94,7 +98,7 @@ public class UserService : IUserService {
 
     public async Task<UserOutWithoutPassword> GetAnUserWithoutPassword(int id) {
         var user = await _databaseContext.Users.FirstOrDefaultAsync(u => u.Id == id);
-        if (user == null) throw new UserWithIdNotFoundException(id);
+        if (user is null) throw new UserWithIdNotFoundException(id);
 
         var roles = await _databaseContext.Roles.ToListAsync();
         var userAuth = await _databaseContext.UsersAuths.FirstOrDefaultAsync(ua => ua.UserId == user.Id);
@@ -114,10 +118,10 @@ public class UserService : IUserService {
 
     public async Task<UserOut> GetAnUserWithPassword(int id) {
         var user = await _databaseContext.Users.FirstOrDefaultAsync(u => u.Id == id);
-        if (user == null) throw new UserWithIdNotFoundException(id);
+        if (user is null) throw new UserWithIdNotFoundException(id);
 
         var userAuth = await _databaseContext.UsersAuths.FirstOrDefaultAsync(u => u.UserId == id);
-        if (userAuth == null) throw new UserAuthWithIdNotFoundException(id);
+        if (userAuth is null) throw new UserAuthWithIdNotFoundException(id);
 
         var roles = await _databaseContext.Roles.ToListAsync();
 
@@ -137,7 +141,7 @@ public class UserService : IUserService {
 
     public async Task<string> ChangePassword(int id, ChangePasswordIn request) {
         var userAuth = await _databaseContext.UsersAuths.FirstOrDefaultAsync(ua => ua.UserId == id);
-        if (userAuth == null) throw new UserAuthWithIdNotFoundException(id);
+        if (userAuth is null) throw new UserAuthWithIdNotFoundException(id);
 
         if (!BCrypt.Net.BCrypt.Verify(request.OldPassword, userAuth.Password)) throw new PasswordsNotMatchingException();
 
@@ -155,10 +159,10 @@ public class UserService : IUserService {
 
     public async Task<string> ChangeRole(int id, string roleName) {
         var role = await _databaseContext.Roles.FirstOrDefaultAsync(r => r.Name.Equals(roleName));
-        if (role == null) throw new RoleNotFoundException(roleName);
+        if (role is null) throw new RoleNotFoundException(roleName);
 
         var userAuth = await _databaseContext.UsersAuths.FirstOrDefaultAsync(ua => ua.Id == id);
-        if (userAuth == null) throw new UserAuthWithIdNotFoundException(id);
+        if (userAuth is null) throw new UserAuthWithIdNotFoundException(id);
 
         userAuth.Role = role;
 
