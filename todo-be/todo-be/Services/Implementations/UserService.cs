@@ -100,7 +100,7 @@ public class UserService : IUserService {
                                         user.Email,
                                         user.DateOfBirth.ToString(),
                                         user.DateTimeOfRegistration.ToString(),
-                                        roles.FirstOrDefault(r => r.Id == userAuth.Id).Name));
+                                        roles.FirstOrDefault(r => r.Id == userAuth.RoleId).Name));
         }
 
         return usersOut;
@@ -120,7 +120,7 @@ public class UserService : IUserService {
             user.Email,
             user.DateOfBirth.ToString(),
             user.DateTimeOfRegistration.ToString(),
-            roles.FirstOrDefault(r => r.Id == userAuth.Id).Name
+            roles.FirstOrDefault(r => r.Id == userAuth.RoleId).Name
         );
 
         return userOutWithoutPassword;
@@ -143,13 +143,16 @@ public class UserService : IUserService {
              user.DateOfBirth.ToString(),
              user.DateTimeOfRegistration.ToString(),
              userAuth.Password,
-             roles.FirstOrDefault(r => r.Id == userAuth.Id).Name
+             roles.FirstOrDefault(r => r.Id == userAuth.RoleId).Name
          );
 
         return userOut;
     }
 
     public async Task<string> ChangePassword(int id, ChangePasswordIn request) {
+        var user = await _databaseContext.Users.FirstOrDefaultAsync(u => u.Id == id);
+        if (user is null) throw new UserWithIdNotFoundException(id);
+
         var userAuth = await _databaseContext.UsersAuths.FirstOrDefaultAsync(ua => ua.UserId == id);
         if (userAuth is null) throw new UserAuthWithIdNotFoundException(id);
 
