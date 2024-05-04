@@ -17,6 +17,16 @@ public class UserService : IUserService {
     }
 
     public async Task<UserOutWithoutPassword> CreateAnUser(UserIn request) {
+        DateTime minDate = new DateTime(1950, 1, 1);
+        DateTime maxDate = DateTime.Today;
+
+        if (!DateTime.TryParse(request.DateOfBirth, out DateTime inputStartDate))
+            throw new InvalidBirthDateException();
+
+        if (!(inputStartDate >= minDate && inputStartDate <= maxDate))
+            throw new InvalidBirthDateException();
+
+
         var role = await _databaseContext.Roles.FirstOrDefaultAsync(r => r.Id == 1);
 
         var username = $"{request.FirstName.ToLower()}_{request.LastName.ToLower()}_{GenerateRandomString(10)}";
