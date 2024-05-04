@@ -13,6 +13,7 @@ builder.Services.AddDbContext<DatabaseContext>(options => options.UseSqlServer(b
 
 builder.Services.AddScoped<IUserAuthService, UserAuthService>();
 builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddScoped<IToDoService, ToDoService>();
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
