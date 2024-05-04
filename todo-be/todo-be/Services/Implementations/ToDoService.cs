@@ -1,10 +1,17 @@
-﻿using todo_be.Models.DTOs.In;
+﻿using todo_be.Database;
+using todo_be.Models.DTOs.In;
 using todo_be.Models.DTOs.Out;
 using todo_be.Services.Interfaces;
 
 namespace todo_be.Services.Implementations;
 public class ToDoService : IToDoService {
-    public Task<ToDoOut> CreateToDo(ToDoIn request) {
+    private readonly DatabaseContext _databaseContext;
+
+    public ToDoService(DatabaseContext databaseContext) {
+        _databaseContext = databaseContext;
+    }
+
+    public Task<ToDoOut> CreateToDo(int userId, ToDoIn request) {
         throw new NotImplementedException();
     }
 
@@ -20,7 +27,7 @@ public class ToDoService : IToDoService {
         throw new NotImplementedException();
     }
 
-    public Task<ToDoOut> UpdateToDo(ToDoIn request) {
+    public Task<ToDoOut> UpdateToDo(int userId, ToDoIn request) {
         throw new NotImplementedException();
     }
 }
