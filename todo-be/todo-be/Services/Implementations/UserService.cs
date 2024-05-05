@@ -63,7 +63,7 @@ public class UserService : IUserService {
             throw new UserNotCreatedException();
         }
 
-        return new UserOutWithoutPassword(user.Id.ToString(), user.FirstName, user.LastName, user.Email, user.DateOfBirth.ToString(), user.DateTimeOfRegistration.ToString(), userAuth.Role.Name);
+        return new UserOutWithoutPassword(user.Id.ToString(), user.FirstName, user.LastName, user.Email, user.DateOfBirth.ToString(), user.DateTimeOfRegistration.ToString(), userAuth?.Role?.Name ?? "Unknown");
     }
 
     public async Task<string> DeleteAnUser(int id) {
