@@ -19,6 +19,19 @@ public class ToDoController : ControllerBase {
 
     [HttpGet, Authorize(Roles = "User, Admin")]
     public async Task<ActionResult<ToDoOut>> GetAllToDos() {
-        return Ok("Ok");
+        try {
+            var token = HttpContext.Request.Headers["Authorization"].FirstOrDefault()?.Split(" ").Last();
+
+            var handler = new JwtSecurityTokenHandler();
+            var tokenS = handler.ReadToken(token) as JwtSecurityToken;
+
+            var username = tokenS.Claims.First(claim => claim.Type == ClaimTypes.Name).Value;
+
+            var toDos = await _toDoService.GetAllToDos(username);
+            
+            return Ok(toDos);
+        } catch (Exception ex) {
+            return BadRequest(ex.Message);
+        }
     }
 }

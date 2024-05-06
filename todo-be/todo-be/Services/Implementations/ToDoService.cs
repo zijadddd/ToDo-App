@@ -32,7 +32,7 @@ public class ToDoService : IToDoService {
         List<ToDoOut> toDosOut = new List<ToDoOut>();
 
         foreach (var toDo in toDos) 
-            toDosOut.Add(new ToDoOut(toDo.Id, toDo.Title, toDo.Description, toDo.Created, toDo.Updated, username));
+            toDosOut.Add(new ToDoOut(toDo.Id, toDo.Title, toDo.Description, toDo.Created, toDo.Modified, username));
 
         return toDosOut;
     }
