@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using todo_be.Models.DTOs.In;
-using todo_be.Models.DTOs.Out;
+using todo_be.Models.DTOs.InModels;
+using todo_be.Models.DTOs.OutModels;
 using todo_be.Services.Interfaces;
 
 namespace todo_be.Controllers;

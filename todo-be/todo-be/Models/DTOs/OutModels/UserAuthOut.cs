@@ -1,4 +1,4 @@
-﻿namespace todo_be.Models.DTOs.Out;
+﻿namespace todo_be.Models.DTOs.OutModels;
 public record UserAuthOut {
     public string Token { get; init; } = string.Empty;
 

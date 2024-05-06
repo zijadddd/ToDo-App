@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace todo_be.Models.DTOs.In;
+namespace todo_be.Models.DTOs.InModels;
 public record UserAuthIn {
 
     [Required]

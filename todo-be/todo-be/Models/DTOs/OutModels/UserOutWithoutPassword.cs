@@ -1,4 +1,4 @@
-﻿namespace todo_be.Models.DTOs.Out;
+﻿namespace todo_be.Models.DTOs.OutModels;
 public record UserOutWithoutPassword {
     public string Id { get; init; } = string.Empty;
     public string FirstName { get; init; } = string.Empty;

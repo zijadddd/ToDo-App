@@ -1,5 +1,5 @@
-﻿using todo_be.Models.DTOs.In;
-using todo_be.Models.DTOs.Out;
+﻿using todo_be.Models.DTOs.InModels;
+using todo_be.Models.DTOs.OutModels;
 
 namespace todo_be.Services.Interfaces;
 public interface IToDoService {

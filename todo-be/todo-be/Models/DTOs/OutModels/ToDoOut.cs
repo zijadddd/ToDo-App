@@ -1,4 +1,4 @@
-namespace todo_be.Models.DTOs.Out;
+namespace todo_be.Models.DTOs.OutModels;
 
 public record ToDoOut {
     public int Id { get; init; }

@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 using todo_be.Models.DAOs;
-using todo_be.Models.DTOs.Out;
+using todo_be.Models.DTOs.OutModels;
 using todo_be.Services.Interfaces;
 
 namespace todo_be.Controllers;
@@ -28,7 +28,7 @@ public class ToDoController : ControllerBase {
             var username = tokenS.Claims.First(claim => claim.Type == ClaimTypes.Name).Value;
 
             var toDos = await _toDoService.GetAllToDos(username);
-            
+
             return Ok(toDos);
         } catch (Exception ex) {
             return BadRequest(ex.Message);

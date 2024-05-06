@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace todo_be.Models.DTOs.In;
+namespace todo_be.Models.DTOs.InModels;
 public record ChangePasswordIn {
     [Required]
     [StringLength(64, MinimumLength = 8, ErrorMessage = "Invalid password. The password should be at least 8 characters long.")]

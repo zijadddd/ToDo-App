@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace todo_be.Models.DTOs.In;
+namespace todo_be.Models.DTOs.InModels;
 public record UserIn {
     [Required]
     [RegularExpression(@"^[A-Z][a-z]*$", ErrorMessage = "Invalid first name. Valid: John")]

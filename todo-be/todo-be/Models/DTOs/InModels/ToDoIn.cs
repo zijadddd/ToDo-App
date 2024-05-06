@@ -1,4 +1,4 @@
-﻿namespace todo_be.Models.DTOs.In;
+﻿namespace todo_be.Models.DTOs.InModels;
 public record ToDoIn {
     public string Title { get; init; } = string.Empty;
     public string Description { get; init; } = string.Empty;
