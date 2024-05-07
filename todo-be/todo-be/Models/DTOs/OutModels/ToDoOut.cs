@@ -1,6 +1,6 @@
 namespace todo_be.Models.DTOs.OutModels;
 
-public record ToDoOut {
+public sealed record ToDoOut {
     public int Id { get; init; }
     public string Title { get; init; } = string.Empty;
     public string Description { get; init; } = string.Empty;

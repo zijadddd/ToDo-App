@@ -8,7 +8,7 @@ namespace todo_be.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]
-public class UserAuthController : ControllerBase {
+public sealed class UserAuthController : ControllerBase {
 
     private readonly IUserAuthService _userAuthService;
 

@@ -1,4 +1,4 @@
 ﻿namespace todo_be.Exceptions;
-public class UserNotCreatedException : Exception {
+public sealed class UserNotCreatedException : Exception {
     public UserNotCreatedException() : base("User isn't created.") { }
 }

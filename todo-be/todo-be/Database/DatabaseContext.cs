@@ -2,7 +2,7 @@
 using todo_be.Models.DAOs;
 
 namespace todo_be.Database;
-public class DatabaseContext : DbContext {
+public sealed class DatabaseContext : DbContext {
 
     public DatabaseContext(DbContextOptions<DatabaseContext> options) : base(options) { }
 

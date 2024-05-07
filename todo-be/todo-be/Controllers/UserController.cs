@@ -7,7 +7,7 @@ using todo_be.Services.Interfaces;
 namespace todo_be.Controllers;
 [Route("api/[controller]")]
 [ApiController]
-public class UserController : ControllerBase {
+public sealed class UserController : ControllerBase {
 
     private readonly IUserService _userService;
 

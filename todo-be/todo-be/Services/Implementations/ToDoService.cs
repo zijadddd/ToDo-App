@@ -7,7 +7,7 @@ using todo_be.Models.DTOs.OutModels;
 using todo_be.Services.Interfaces;
 
 namespace todo_be.Services.Implementations;
-public class ToDoService : IToDoService {
+public sealed class ToDoService : IToDoService {
     private readonly DatabaseContext _databaseContext;
 
     public ToDoService(DatabaseContext databaseContext) {

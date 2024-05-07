@@ -7,7 +7,7 @@ using todo_be.Models.DTOs.OutModels;
 using todo_be.Services.Interfaces;
 
 namespace todo_be.Services.Implementations;
-public class UserService : IUserService {
+public sealed class UserService : IUserService {
 
     private readonly DatabaseContext _databaseContext;
 
@@ -100,7 +100,7 @@ public class UserService : IUserService {
                                         user.Email,
                                         user.DateOfBirth.ToString(),
                                         user.DateTimeOfRegistration.ToString(),
-                                        roles.FirstOrDefault(r => r.Id == userAuth.RoleId).Name));
+                                        roles.FirstOrDefault(r => r.Id == userAuth.RoleId).Name?? "Unknown"));
         }
 
         return usersOut;
@@ -120,7 +120,7 @@ public class UserService : IUserService {
             user.Email,
             user.DateOfBirth.ToString(),
             user.DateTimeOfRegistration.ToString(),
-            roles.FirstOrDefault(r => r.Id == userAuth.RoleId).Name
+            roles.FirstOrDefault(r => r.Id == userAuth.RoleId).Name?? "Unknown"
         );
 
         return userOutWithoutPassword;
@@ -143,7 +143,7 @@ public class UserService : IUserService {
              user.DateOfBirth.ToString(),
              user.DateTimeOfRegistration.ToString(),
              userAuth.Password,
-             roles.FirstOrDefault(r => r.Id == userAuth.RoleId).Name
+             roles.FirstOrDefault(r => r.Id == userAuth.RoleId).Name?? "Unknown"
          );
 
         return userOut;

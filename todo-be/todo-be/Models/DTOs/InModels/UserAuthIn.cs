@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
 namespace todo_be.Models.DTOs.InModels;
-public record UserAuthIn {
+public sealed record UserAuthIn {
 
     [Required]
     public string UserName { get; init; } = string.Empty;
