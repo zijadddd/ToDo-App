@@ -14,7 +14,7 @@ public sealed class ToDoService : IToDoService {
         _databaseContext = databaseContext;
     }
 
-    public Task<ToDoOut> CreateToDo(int userId, ToDoIn request) {
+    public Task<ToDoOut> CreateToDo(string username, ToDoIn request) {
         throw new NotImplementedException();
     }
 
@@ -41,7 +41,7 @@ public sealed class ToDoService : IToDoService {
         throw new NotImplementedException();
     }
 
-    public Task<ToDoOut> UpdateToDo(int userId, ToDoIn request) {
+    public Task<ToDoOut> UpdateToDo(ToDoIn request) {
         throw new NotImplementedException();
     }
 }

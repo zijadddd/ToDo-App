@@ -2,8 +2,6 @@
 using System.Security.Claims;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.IdentityModel.Tokens;
-using todo_be.Models.DAOs;
 using todo_be.Models.DTOs.OutModels;
 using todo_be.Services.Interfaces;
 
