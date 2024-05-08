@@ -37,8 +37,20 @@ public sealed class ToDoService : IToDoService {
         return toDosOut;
     }
 
-    public async Task<ToDoOut> GetToDo(string username, int id) {
-        throw new NotImplementedException();
+    public async Task<ToDoOut> GetToDo(int id) {
+        var toDo = await _databaseContext.ToDos.FirstOrDefaultAsync(td => td.Id == id);
+        if (toDo is null) throw new ToDoNotFoundException();
+
+        var userAuth = await _databaseContext.UsersAuths.FirstOrDefaultAsync(u => u.UserId == toDo.UserId);
+
+        ToDoOut toDoOut = new ToDoOut(toDo.Id,
+            toDo.Title,
+            toDo.Description,
+            toDo.Created,
+            toDo.Modified,
+            userAuth.UserName ?? "Unknown");
+
+        return toDoOut;
     }
 
     public Task<ToDoOut> UpdateToDo(ToDoIn request) {
