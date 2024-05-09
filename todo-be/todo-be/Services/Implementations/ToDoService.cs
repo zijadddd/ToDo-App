@@ -18,8 +18,18 @@ public sealed class ToDoService : IToDoService {
         throw new NotImplementedException();
     }
 
-    public Task<string> DeleteToDo(int id) {
-        throw new NotImplementedException();
+    public async Task<string> DeleteToDo(int id) {
+        ToDo toDo = await _databaseContext.ToDos.FirstOrDefaultAsync(td => td.Id == id);
+        if (toDo is null) throw new ToDoNotFoundException();
+        
+        try {
+            _databaseContext.ToDos.Remove(toDo);
+            await _databaseContext.SaveChangesAsync();
+        } catch (Exception ex) {
+            throw new ToDoNotDeletedException(id);
+        }
+
+        return $"ToDo with id {id} has been successfully deleted.";
     }
 
     public async Task<List<ToDoOut>> GetAllToDos(string username) {
