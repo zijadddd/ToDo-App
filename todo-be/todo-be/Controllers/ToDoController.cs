@@ -2,6 +2,7 @@
 using System.Security.Claims;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using todo_be.Models.DAOs;
 using todo_be.Models.DTOs.OutModels;
 using todo_be.Services.Interfaces;
 
@@ -16,7 +17,7 @@ public sealed class ToDoController : ControllerBase {
     }
 
     [HttpGet, Authorize(Roles = "User, Admin")]
-    public async Task<ActionResult<ToDoOut>> GetAllToDos() {
+    public async Task<ActionResult<List<ToDoOut>>> GetAllToDos() {
         try {
             var token = HttpContext.Request.Headers["Authorization"].FirstOrDefault()?.Split(" ").Last();
 
@@ -28,6 +29,16 @@ public sealed class ToDoController : ControllerBase {
             var toDos = await _toDoService.GetAllToDos(username);
 
             return Ok(toDos);
+        } catch (Exception ex) {
+            return BadRequest(ex.Message);
+        }
+    }
+
+    [HttpGet("{id}"), Authorize(Roles = "User, Admin")]
+    public async Task<ActionResult<ToDoOut>> GetAnToDo(int id) {
+        try {
+            var toDo = await _toDoService.GetToDo(id);
+            return Ok(toDo);
         } catch (Exception ex) {
             return BadRequest(ex.Message);
         }
