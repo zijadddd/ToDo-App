@@ -61,12 +61,12 @@ public sealed class ToDoService : IToDoService {
         List<ToDo> toDos = await _databaseContext.ToDos.Where(td => td.UserId == userAuth.UserId).ToListAsync();
         if (toDos.Count == 0) throw new ToDosForUserNotFoundException(username);
 
-        List<ToDoOut> toDosOut = new List<ToDoOut>();
+        List<ToDoOut> response = new List<ToDoOut>();
 
         foreach (var toDo in toDos) 
-            toDosOut.Add(new ToDoOut(toDo.Id, toDo.Title, toDo.Description, toDo.Created, toDo.Modified, username));
+            response.Add(new ToDoOut(toDo.Id, toDo.Title, toDo.Description, toDo.Created, toDo.Modified, username));
 
-        return toDosOut;
+        return response;
     }
 
     public async Task<ToDoOut> GetToDo(int id) {
@@ -75,17 +75,38 @@ public sealed class ToDoService : IToDoService {
 
         var userAuth = await _databaseContext.UsersAuths.FirstOrDefaultAsync(u => u.UserId == toDo.UserId);
 
-        ToDoOut toDoOut = new ToDoOut(toDo.Id,
+        ToDoOut response = new ToDoOut(toDo.Id,
             toDo.Title,
             toDo.Description,
             toDo.Created,
             toDo.Modified,
             userAuth.UserName ?? "Unknown");
 
-        return toDoOut;
+        return response;
     }
 
-    public Task<ToDoOut> UpdateToDo(ToDoIn request) {
-        throw new NotImplementedException();
+    public async Task<ToDoOut> UpdateToDo(int id, ToDoIn request, string username) {
+        var toDo = await _databaseContext.ToDos.FirstOrDefaultAsync(td => td.Id == id);
+        if (toDo is null) throw new ToDoNotFoundException();
+
+        var userAuth = _databaseContext.UsersAuths.FirstOrDefault(userAuth => userAuth.UserName.Equals(username));
+        if (userAuth is null) throw new UserNotFoundException();
+
+        if (toDo.UserId != userAuth.UserId) throw new CannotModifieToDoException(id);
+
+        try {
+            toDo.Title = request.Title;
+            toDo.Description = request.Description;
+            toDo.Modified = DateTime.UtcNow;
+
+            _databaseContext.ToDos.Update(toDo);
+            await _databaseContext.SaveChangesAsync();
+
+            ToDoOut response = new ToDoOut(toDo.Id, toDo.Title, toDo.Description, toDo.Created, toDo.Modified, userAuth.UserName);
+
+            return response;
+        } catch (Exception ex) {
+            throw new ToDoNotUpdatedException();
+        }
     }
 }

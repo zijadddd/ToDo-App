@@ -17,11 +17,12 @@ public sealed class UserController : ControllerBase {
 
     [HttpPost, AllowAnonymous]
     public async Task<ActionResult<UserOutWithoutPassword>> CreateAnUser(UserIn request) {
-        if (request == null) return BadRequest("You must fill the data to register.");
+        if (request is null) return BadRequest("You must fill the data to register.");
         try {
             if (ModelState.IsValid) {
-                var user = await _userService.CreateAnUser(request);
-                return Ok(user);
+                var response = await _userService.CreateAnUser(request);
+
+                return Ok(response);
             }
             return BadRequest("User data is not good.");
         } catch (Exception ex) {
@@ -32,8 +33,9 @@ public sealed class UserController : ControllerBase {
     [HttpGet, Authorize(Roles = "Admin")]
     public async Task<ActionResult<List<UserOutWithoutPassword>>> GetAllUsers() {
         try {
-            var users = await _userService.GetAllUsers();
-            return Ok(users);
+            var response = await _userService.GetAllUsers();
+
+            return Ok(response);
         } catch (Exception ex) {
             return BadRequest(ex.Message);
         }
@@ -42,8 +44,9 @@ public sealed class UserController : ControllerBase {
     [HttpGet("getUserWithPassword/{id}"), Authorize(Roles = "Admin")]
     public async Task<ActionResult<UserOut>> GetAnUserWithPassword(int id) {
         try {
-            var user = await _userService.GetAnUserWithPassword(id);
-            return Ok(user);
+            var response = await _userService.GetAnUserWithPassword(id);
+
+            return Ok(response);
         } catch (Exception ex) {
             return BadRequest(ex.Message);
         }
@@ -52,8 +55,9 @@ public sealed class UserController : ControllerBase {
     [HttpGet("getUserWithoutPassword/{id}"), Authorize(Roles = "User, Admin")]
     public async Task<ActionResult<UserOut>> GetAnUserWithoutPassword(int id) {
         try {
-            var user = await _userService.GetAnUserWithoutPassword(id);
-            return Ok(user);
+            var response = await _userService.GetAnUserWithoutPassword(id);
+
+            return Ok(response);
         } catch (Exception ex) {
             return BadRequest(ex.Message);
         }
@@ -62,8 +66,9 @@ public sealed class UserController : ControllerBase {
     [HttpDelete("{id}"), Authorize(Roles = "Admin")]
     public async Task<ActionResult<string>> DeleteAnUser(int id) {
         try {
-            var message = await _userService.DeleteAnUser(id);
-            return Ok(message);
+            var response = await _userService.DeleteAnUser(id);
+
+            return Ok(response);
         } catch (Exception ex) {
             return BadRequest(ex.Message);
         }
@@ -71,10 +76,11 @@ public sealed class UserController : ControllerBase {
 
     [HttpPut("changeRole/{id}"), Authorize(Roles = "Admin")]
     public async Task<ActionResult<string>> ChangeRole(int id, [FromBody] string role) {
-        if (role == null) return BadRequest("You must provide a role name to change user's role.");
+        if (role is null) return BadRequest("You must provide a role name to change user's role.");
         try {
-            var message = await _userService.ChangeRole(id, role);
-            return Ok(message);
+            var response = await _userService.ChangeRole(id, role);
+
+            return Ok(response);
         } catch (Exception ex) {
             return BadRequest(ex.Message);
         }
@@ -82,10 +88,11 @@ public sealed class UserController : ControllerBase {
 
     [HttpPut("changePassword/{id}"), Authorize(Roles = "User, Admin")]
     public async Task<ActionResult<string>> ChangePassword(int id, [FromBody] ChangePasswordIn request) {
-        if (request == null) return BadRequest("You need to provide old and new passwords to change it.");
+        if (request is null) return BadRequest("You need to provide old and new passwords to change it.");
         try {
-            var message = await _userService.ChangePassword(id, request);
-            return Ok(message);
+            var response = await _userService.ChangePassword(id, request);
+
+            return Ok(response);
         } catch (Exception ex) {
             return BadRequest(ex.Message);
         }

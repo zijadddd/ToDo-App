@@ -88,13 +88,13 @@ public sealed class UserService : IUserService {
         var users = await _databaseContext.Users.ToListAsync();
         if (users.Count == 0) throw new NotASingleUserWasFoundException();
 
-        List<UserOutWithoutPassword> usersOut = new List<UserOutWithoutPassword>();
+        List<UserOutWithoutPassword> response = new List<UserOutWithoutPassword>();
         var roles = await _databaseContext.Roles.ToListAsync();
 
         foreach (var user in users) {
             var userAuth = await _databaseContext.UsersAuths.FirstOrDefaultAsync(ua => ua.UserId == user.Id);
 
-            usersOut.Add(new UserOutWithoutPassword(user.Id.ToString(),
+            response.Add(new UserOutWithoutPassword(user.Id.ToString(),
                                         user.FirstName,
                                         user.LastName,
                                         user.Email,
@@ -103,7 +103,7 @@ public sealed class UserService : IUserService {
                                         roles.FirstOrDefault(r => r.Id == userAuth.RoleId).Name?? "Unknown"));
         }
 
-        return usersOut;
+        return response;
     }
 
     public async Task<UserOutWithoutPassword> GetAnUserWithoutPassword(int id) {
@@ -113,7 +113,7 @@ public sealed class UserService : IUserService {
         var roles = await _databaseContext.Roles.ToListAsync();
         var userAuth = await _databaseContext.UsersAuths.FirstOrDefaultAsync(ua => ua.UserId == user.Id);
 
-        UserOutWithoutPassword userOutWithoutPassword = new UserOutWithoutPassword(
+        UserOutWithoutPassword response = new UserOutWithoutPassword(
             user.Id.ToString(),
             user.FirstName,
             user.LastName,
@@ -123,7 +123,7 @@ public sealed class UserService : IUserService {
             roles.FirstOrDefault(r => r.Id == userAuth.RoleId).Name?? "Unknown"
         );
 
-        return userOutWithoutPassword;
+        return response;
     }
 
     public async Task<UserOut> GetAnUserWithPassword(int id) {
@@ -135,7 +135,7 @@ public sealed class UserService : IUserService {
 
         var roles = await _databaseContext.Roles.ToListAsync();
 
-        UserOut userOut = new UserOut(
+        UserOut response = new UserOut(
              user.Id.ToString(),
              user.FirstName,
              user.LastName,
@@ -146,7 +146,7 @@ public sealed class UserService : IUserService {
              roles.FirstOrDefault(r => r.Id == userAuth.RoleId).Name?? "Unknown"
          );
 
-        return userOut;
+        return response;
     }
 
     public async Task<string> ChangePassword(int id, ChangePasswordIn request) {

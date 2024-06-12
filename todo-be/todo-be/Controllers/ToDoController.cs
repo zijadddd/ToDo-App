@@ -26,9 +26,9 @@ public sealed class ToDoController : ControllerBase {
 
             var username = tokenS.Claims.First(claim => claim.Type == ClaimTypes.Name).Value;
 
-            var toDos = await _toDoService.GetAllToDos(username);
+            var response = await _toDoService.GetAllToDos(username);
 
-            return Ok(toDos);
+            return Ok(response);
         } catch (Exception ex) {
             return BadRequest(ex.Message);
         }
@@ -37,8 +37,9 @@ public sealed class ToDoController : ControllerBase {
     [HttpGet("{id}"), Authorize(Roles = "User, Admin")]
     public async Task<ActionResult<ToDoOut>> GetAnToDo(int id) {
         try {
-            var toDo = await _toDoService.GetToDo(id);
-            return Ok(toDo);
+            var response = await _toDoService.GetToDo(id);
+
+            return Ok(response);
         } catch (Exception ex) {
             return BadRequest(ex.Message);
         }
@@ -53,8 +54,40 @@ public sealed class ToDoController : ControllerBase {
         var claimValue = jsonToken.Claims.First(claim => claim.Type == ClaimTypes.Name).Value;
 
         try {
-            var toDo = await _toDoService.CreateToDo(claimValue, request);
-            return Ok(toDo);
+            var response = await _toDoService.CreateToDo(claimValue, request);
+
+            return Ok(response);
+        } catch (Exception ex) {
+            return BadRequest(ex.Message);
+        }
+    }
+    
+    [HttpDelete("{id}"), Authorize(Roles = "User, Admin")]
+    public async Task<ActionResult<string>> DeleteAnToDo(int id) {
+        try {
+            var response = await _toDoService.DeleteToDo(id);
+
+            return Ok(response);
+        } catch (Exception ex) {
+            return BadRequest(ex.Message);
+        }
+    }
+
+    [HttpPut("{id}"), Authorize(Roles = "User, Admin")]
+    public async Task<ActionResult<ToDoOut>> UpdateAnToDo(int id, ToDoIn request) {
+        if (request is null) return BadRequest("You need to provide new data to update ToDo.");
+
+        var token = HttpContext.Request.Headers["Authorization"].FirstOrDefault()?.Split(" ").Last();
+
+        var handler = new JwtSecurityTokenHandler();
+        var tokenS = handler.ReadToken(token) as JwtSecurityToken;
+
+        var username = tokenS.Claims.First(claim => claim.Type == ClaimTypes.Name).Value;
+
+        try {
+            var response = await _toDoService.UpdateToDo(id, request, username);
+
+            return Ok(response);
         } catch (Exception ex) {
             return BadRequest(ex.Message);
         }

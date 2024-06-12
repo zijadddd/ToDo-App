@@ -6,7 +6,7 @@ public interface IToDoService {
     Task<List<ToDoOut>> GetAllToDos(string username);
     Task<ToDoOut> GetToDo(int id);
     Task<ToDoOut> CreateToDo(string username, ToDoIn request);
-    Task<ToDoOut> UpdateToDo(ToDoIn request);
+    Task<ToDoOut> UpdateToDo(int id, ToDoIn request, string username);
     Task<string> DeleteToDo(int id);
 }
 
