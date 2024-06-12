@@ -1,10 +1,12 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Http.HttpResults;
+using Microsoft.EntityFrameworkCore;
 using todo_be.Database;
 using todo_be.Exceptions;
 using todo_be.Models.DAOs;
 using todo_be.Models.DTOs.InModels;
 using todo_be.Models.DTOs.OutModels;
 using todo_be.Services.Interfaces;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace todo_be.Services.Implementations;
 public sealed class ToDoService : IToDoService {
@@ -14,8 +16,28 @@ public sealed class ToDoService : IToDoService {
         _databaseContext = databaseContext;
     }
 
-    public Task<ToDoOut> CreateToDo(string username, ToDoIn request) {
-        throw new NotImplementedException();
+    public async Task<ToDoOut> CreateToDo(string username, ToDoIn request) {
+        var userAuth = await _databaseContext.UsersAuths.FirstOrDefaultAsync(user => user.UserName.Equals(username));
+        if (userAuth is null) throw new UserWithUserNameNotFoundException(username);
+
+        var user = await _databaseContext.Users.FirstOrDefaultAsync(user => user.Id == userAuth.UserId);
+        if (user is null) throw new UserWithUserNameNotFoundException(username);
+
+        ToDo toDo = new ToDo {
+            Title = request.Title,
+            Description = request.Description,
+            Created = DateTime.UtcNow,
+            User = user
+        };
+
+        try {
+            _databaseContext.Add(toDo);
+            await _databaseContext.SaveChangesAsync();
+
+            return new ToDoOut(toDo.Id, toDo.Title, toDo.Description, toDo.Created, toDo.Modified, username);
+        } catch (Exception ex) {
+            throw new ToDoNotCreatedException();
+        }
     }
 
     public async Task<string> DeleteToDo(int id) {

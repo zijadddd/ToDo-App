@@ -2,7 +2,7 @@
 using System.Security.Claims;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using todo_be.Models.DAOs;
+using todo_be.Models.DTOs.InModels;
 using todo_be.Models.DTOs.OutModels;
 using todo_be.Services.Interfaces;
 
@@ -38,6 +38,22 @@ public sealed class ToDoController : ControllerBase {
     public async Task<ActionResult<ToDoOut>> GetAnToDo(int id) {
         try {
             var toDo = await _toDoService.GetToDo(id);
+            return Ok(toDo);
+        } catch (Exception ex) {
+            return BadRequest(ex.Message);
+        }
+    }
+
+    [HttpPost, Authorize(Roles = "User, Admin")]
+    public async Task<ActionResult<ToDoOut>> CreateAnToDo(ToDoIn request) {
+        var bearerToken = Request.Headers["Authorization"].ToString().Replace("Bearer ", string.Empty);
+        var handler = new JwtSecurityTokenHandler();
+        var jsonToken = handler.ReadToken(bearerToken) as JwtSecurityToken;
+
+        var claimValue = jsonToken.Claims.First(claim => claim.Type == ClaimTypes.Name).Value;
+
+        try {
+            var toDo = await _toDoService.CreateToDo(claimValue, request);
             return Ok(toDo);
         } catch (Exception ex) {
             return BadRequest(ex.Message);

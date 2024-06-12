@@ -45,7 +45,7 @@ public sealed class UserService : IUserService {
             LastName = request.LastName,
             Email = request.Email,
             DateOfBirth = DateOnly.Parse(request.DateOfBirth),
-            DateTimeOfRegistration = DateTime.Now
+            DateTimeOfRegistration = DateTime.UtcNow
         };
 
         UserAuth userAuth = new UserAuth {
