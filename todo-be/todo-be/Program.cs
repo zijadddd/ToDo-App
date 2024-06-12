@@ -2,7 +2,6 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
-using System.IdentityModel.Tokens.Jwt;
 using System.Text;
 using todo_be.Database;
 using todo_be.Services.Implementations;
@@ -10,7 +9,11 @@ using todo_be.Services.Interfaces;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddDbContext<DatabaseContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("Database")));
+builder.Services.AddDbContext<DatabaseContext>(options => {
+    var connectionString = builder.Configuration.GetConnectionString("Database");
+    var serverVersion = builder.Configuration["MySQLServerVersion"];
+    options.UseMySql(connectionString, new MySqlServerVersion(new Version(serverVersion)));
+});
 
 builder.Services.AddScoped<IUserAuthService, UserAuthService>();
 builder.Services.AddScoped<IUserService, UserService>();
