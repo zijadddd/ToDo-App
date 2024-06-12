@@ -40,10 +40,15 @@ public sealed class ToDoService : IToDoService {
         }
     }
 
-    public async Task<string> DeleteToDo(int id) {
+    public async Task<string> DeleteToDo(int id, string username) {
         ToDo toDo = await _databaseContext.ToDos.FirstOrDefaultAsync(td => td.Id == id);
         if (toDo is null) throw new ToDoNotFoundException();
-        
+
+        var userAuth = _databaseContext.UsersAuths.FirstOrDefault(userAuth => userAuth.UserName.Equals(username));
+        if (userAuth is null) throw new UserNotFoundException();
+
+        if (toDo.UserId != userAuth.UserId) throw new CannotDeleteToDoException(id);
+
         try {
             _databaseContext.ToDos.Remove(toDo);
             await _databaseContext.SaveChangesAsync();

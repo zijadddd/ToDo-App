@@ -64,8 +64,15 @@ public sealed class ToDoController : ControllerBase {
     
     [HttpDelete("{id}"), Authorize(Roles = "User, Admin")]
     public async Task<ActionResult<string>> DeleteAnToDo(int id) {
+        var token = HttpContext.Request.Headers["Authorization"].FirstOrDefault()?.Split(" ").Last();
+
+        var handler = new JwtSecurityTokenHandler();
+        var tokenS = handler.ReadToken(token) as JwtSecurityToken;
+
+        var username = tokenS.Claims.First(claim => claim.Type == ClaimTypes.Name).Value;
+
         try {
-            var response = await _toDoService.DeleteToDo(id);
+            var response = await _toDoService.DeleteToDo(id, username);
 
             return Ok(response);
         } catch (Exception ex) {
